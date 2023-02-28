@@ -1,0 +1,15 @@
+schema: src/lib/server/schema.ts
+generates:
+  src/lib/server/.generated.d.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers
+    config:
+      useIndexSignature: true
+      useTypeImports: true
+      contextType: "./context#Context"
+      defaultMapper: Partial<{T}>
+      mapperTypeSuffix: Data
+      scalars:
+        JSON: string
+      showUnusedMappers: true
