@@ -1,7 +1,7 @@
 import type { SvelteContextFunction } from "$lib/apollo";
-import type { RequestEvent } from "@sveltejs/kit";
 
-export type Context = { json: string };
-export const context: SvelteContextFunction<Context> = async (
-	event: RequestEvent
-): Promise<Context> => ({ json: await event.request.json() });
+export type Context = { text: string; random: number };
+export const context: SvelteContextFunction<Context> = async (event) => ({
+	text: await event.request.text(),
+	random: Math.random(),
+});
