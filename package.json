@@ -30,7 +30,7 @@
 	},
 	"peerDependencies": {
 		"@apollo/server": "^4.0.0",
-		"svelte": "^3.54.0"
+		"@sveltejs/kit": "^1.0.0"
 	},
 	"devDependencies": {
 		"@apollo/server": "^4.0.0",
