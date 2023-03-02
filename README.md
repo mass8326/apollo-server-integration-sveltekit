@@ -1,58 +1,49 @@
-# create-svelte
+# apollo-server-integration-sveltekit
 
-Everything you need to build a Svelte library, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This integration is for Apollo Server 4 and has been made to mirror the official [Next.js integration](https://github.com/apollo-server-integrations/apollo-server-integration-next).
 
-Read more about creating a library [in the docs](https://kit.svelte.dev/docs/packaging).
+## Installation
 
-## Creating a project
+Available through the [npm registry](https://www.npmjs.com/), use your preferred package manager to install.
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+```sh
+$ npm i -D apollo-server-integration-sveltekit
 ```
 
-## Developing
+## Getting Started
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Create an `ApolloServer` instance and pass it to `startServerAndCreateSvelteHandler`. It will create a `RequestHandler` that you can export as a server route's `GET` and `POST` methods.
 
-```bash
-npm run dev
+```js
+// src/routes/+server.js
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+import { ApolloServer } from "@apollo/server";
+import { startServerAndCreateSvelteHandler } from "apollo-server-integration-sveltekit";
+import { resolvers, typeDefs, context } from "...";
+
+const server = new ApolloServer({ resolvers, typeDefs });
+
+const handler = startServerAndCreateSvelteHandler(server, { context });
+
+export { handler as GET, handler as POST };
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+Types are available and may be used to help create a context function.
 
-## Building
+```ts
+// src/server/context.ts
 
-To build your library:
+import type { SvelteContextFunction } from "apollo-server-integration-sveltekit";
 
-```bash
-npm run package
+export type Context = { text: string; random: number };
+export const context: SvelteContextFunction<Context> = async (event) => ({
+	text: await event.request.text(),
+	random: Math.random(),
+});
 ```
 
-To create a production version of your showcase app:
+## Live Demo
 
-```bash
-npm run build
-```
+This repository makes use of `svelte-package`. All code related to the published npm package is under `src/lib/apollo`.
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
-
-## Publishing
-
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
-
-```bash
-npm publish
-```
+The rest of the repository serves as an example website that is available here: https://apollo-server-integration-sveltekit.vercel.app/
